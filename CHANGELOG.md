@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 — 2026-06-03
+
+- **Add Opus 4.8** — `claude-opus-4-8` (and the `claude-opus-4-8-instant` virtual variant) are now first in the model order, so the `opus` shortcut resolves to Opus 4.8. It's an adaptive-thinking model with the label-accurate effort map (`low→low`, `medium→medium`, `high→high`, `xhigh→xhigh`; `max` reachable via a shifted `thinkingLevelMap` in `~/.pi/agent/models.json`), matching Opus 4.7.
+
 ## 0.4.0 — 2026-05-04
 
 - **Add optional `-instant` variants for adaptive-thinking models** — Opus 4.6/4.7 and Sonnet 4.6 use their real pi model IDs for visible reasoning, plus optional `-instant` virtual variants (no reasoning blocks; effort still applies to compute). The `-instant` variant emits `--thinking disabled` so the CC binary doesn't silently re-enable reasoning from `~/.claude/settings.json` (`alwaysThinkingEnabled` / `effortLevel`). Disable virtual variants with `provider.instantVariants: false`. Haiku 4.5 is unchanged (not adaptive-thinking; uses budget-based thinking gated by `reasoning`).

@@ -25,14 +25,14 @@ pi install npm:pi-claude-bridge
 
 Adaptive-thinking Claude models use the real pi model IDs for visible reasoning:
 
-- `claude-bridge/claude-{opus-4-7,opus-4-6,sonnet-4-6}` — emits visible reasoning blocks
-- `claude-bridge/claude-{opus-4-7,opus-4-6,sonnet-4-6}-instant` — runs without reasoning blocks (effort still applied to compute)
+- `claude-bridge/claude-{opus-4-8,opus-4-7,opus-4-6,sonnet-4-6}` — emits visible reasoning blocks
+- `claude-bridge/claude-{opus-4-8,opus-4-7,opus-4-6,sonnet-4-6}-instant` — runs without reasoning blocks (effort still applied to compute)
 
-Plus `claude-bridge/claude-haiku-4-5` (single variant — haiku uses budget-based thinking, no effort knob). Set `provider.instantVariants: false` to hide the `-instant` virtual variants.
+Plus `claude-bridge/claude-haiku-4-5` (single variant — haiku uses budget-based thinking, no effort knob). Set `provider.instantVariants: false` to hide the `-instant` virtual variants. `opus` resolves to Opus 4.8 (first in order).
 
 Pi's `reasoning` slider sets the API effort tier. Built-in defaults prefer label accuracy:
 
-| Pi label | Opus 4.7 | Opus 4.6 / Sonnet 4.6 |
+| Pi label | Opus 4.8 / Opus 4.7 | Opus 4.6 / Sonnet 4.6 |
 |---|---|---|
 | `off` | `provider.effortWhenReasoningOff` | `provider.effortWhenReasoningOff` |
 | `minimal` | *(hidden)* | *(hidden)* |
@@ -41,7 +41,7 @@ Pi's `reasoning` slider sets the API effort tier. Built-in defaults prefer label
 | `high` | `high` | `high` |
 | `xhigh` | `xhigh` | **`max`** |
 
-Because pi has no `max` label, Anthropic `max` on Opus 4.7 is only reachable with a custom `thinkingLevelMap` in `~/.pi/agent/models.json`. A shifted Opus 4.7 map can trade label accuracy for access to every Anthropic effort tier.
+Because pi has no `max` label, Anthropic `max` on Opus 4.7/4.8 is only reachable with a custom `thinkingLevelMap` in `~/.pi/agent/models.json`. A shifted map can trade label accuracy for access to every Anthropic effort tier.
 
 Behind the scenes, pi's tools are bridged to Claude Code but it should all work like normal in pi. Bash commands get a 120-second default timeout (matching Claude Code's default) since pi's bash has no timeout by default. Skills in pi are copied over to Claude Code's system prompt so should work as they would with any other pi provider.
 

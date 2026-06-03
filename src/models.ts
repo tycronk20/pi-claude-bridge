@@ -2,7 +2,7 @@
 // `resolveModelId` returns exact match first, else first partial match (substring),
 // so `opus` resolves to the first-listed opus entry.
 //
-// Adaptive-thinking models (Opus 4.6/4.7, Sonnet 4.6) use the real pi-ai model
+// Adaptive-thinking models (Opus 4.6/4.7/4.8, Sonnet 4.6) use the real pi-ai model
 // IDs as the thinking-visible entries. Optional `-instant` virtual variants are
 // added for users who want Claude Code's adaptive thinking disabled while still
 // selecting an effort level via pi's reasoning knob.
@@ -11,10 +11,11 @@
 // so it stays single-variant with no suffix; reasoning controls thinking on/off
 // there as before.
 
-const ADAPTIVE_THINKING_BASE_IDS = ["claude-opus-4-7", "claude-opus-4-6", "claude-sonnet-4-6"] as const;
+const ADAPTIVE_THINKING_BASE_IDS = ["claude-opus-4-8", "claude-opus-4-7", "claude-opus-4-6", "claude-sonnet-4-6"] as const;
 const ADAPTIVE_THINKING_BASE_ID_SET = new Set<string>(ADAPTIVE_THINKING_BASE_IDS);
 
 export const REAL_MODEL_IDS_IN_ORDER = [
+	"claude-opus-4-8",
 	"claude-opus-4-7",
 	"claude-opus-4-6",
 	"claude-sonnet-4-6",
@@ -22,6 +23,7 @@ export const REAL_MODEL_IDS_IN_ORDER = [
 ] as const;
 
 export const MODEL_IDS_IN_ORDER = [
+	"claude-opus-4-8", "claude-opus-4-8-instant",
 	"claude-opus-4-7", "claude-opus-4-7-instant",
 	"claude-opus-4-6", "claude-opus-4-6-instant",
 	"claude-sonnet-4-6", "claude-sonnet-4-6-instant",
@@ -60,11 +62,11 @@ export function thinkingModeFor(variantId: string): "on" | "off" | undefined {
 //   - `off` visible on thinking-visible models; the bridge sends
 //     provider.effortWhenReasoningOff (default high) instead of omitting effort.
 //   - `minimal` hidden by default — Anthropic's effort enum has no minimal tier.
-//   - Built-in defaults prefer label accuracy. Users who want to expose Opus 4.7
+//   - Built-in defaults prefer label accuracy. Users who want to expose Opus 4.7/4.8
 //     `max` through pi's missing max slot can define explicit claude-bridge
 //     models in ~/.pi/agent/models.json with shifted thinkingLevelMap entries.
 function defaultThinkingLevelMapFor(baseId: string): ThinkingLevelMap {
-	if (baseId === "claude-opus-4-7") {
+	if (baseId === "claude-opus-4-8" || baseId === "claude-opus-4-7") {
 		return { minimal: null, low: "low", medium: "medium", high: "high", xhigh: "xhigh" };
 	}
 	if (baseId === "claude-opus-4-6" || baseId === "claude-sonnet-4-6") {

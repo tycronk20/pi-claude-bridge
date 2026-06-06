@@ -980,6 +980,7 @@ function streamClaudeAgentSdk(model: Model<any>, context: Context, options?: Sim
 
 	const thinkingMode = thinkingModeFor(model.id);
 	const realModelId = baseModelId(model.id);
+	const disablesThinkingForOff = model.id === "claude-opus-4-8" && (options?.reasoning as string | undefined) === "off";
 	const reasoningOffEffort = thinkingMode === "on" && (options?.reasoning as string | undefined) === "off"
 		? (providerSettings.effortWhenReasoningOff ?? "high") as EffortLevel
 		: undefined;
@@ -1002,7 +1003,7 @@ function streamClaudeAgentSdk(model: Model<any>, context: Context, options?: Sim
 
 	const extraArgs: Record<string, string | null> = { model: realModelId };
 	if (strictMcpConfigEnabled) extraArgs["strict-mcp-config"] = null;
-	if (thinkingMode === "off") {
+	if (thinkingMode === "off" || disablesThinkingForOff) {
 		extraArgs["thinking"] = "disabled";
 	} else if (thinkingMode === "on" || effort) {
 		// Opus 4.7 defaults thinking.display to "omitted" (empty thinking text in stream).
@@ -1232,6 +1233,7 @@ async function promptAndWait(
 	const realModelId = baseModelId(modelId);
 	const modelConfig = MODELS.find((m) => m.id === modelId);
 	const providerConfig = loadConfig(cwd).provider ?? {};
+	const disablesThinkingForOff = modelId === "claude-opus-4-8" && options?.thinking === "off";
 	const reasoningOffEffort = thinkingMode === "on" && options?.thinking === "off"
 		? (providerConfig.effortWhenReasoningOff ?? "high") as EffortLevel
 		: undefined;
@@ -1248,7 +1250,7 @@ async function promptAndWait(
 		"strict-mcp-config": null,
 		model: realModelId,
 	};
-	if (thinkingMode === "off") {
+	if (thinkingMode === "off" || disablesThinkingForOff) {
 		extraArgs["thinking"] = "disabled";
 	} else if (thinkingMode === "on" || effort) {
 		extraArgs["thinking-display"] = "summarized";
